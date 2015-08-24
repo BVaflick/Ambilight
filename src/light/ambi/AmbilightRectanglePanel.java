@@ -8,9 +8,9 @@ import java.util.ArrayList;
 
 public class AmbilightRectanglePanel extends JPanel {
 
-    public static int HORIZONTAL_AREAS_COUNT = 8;
+    private int horizontalAreasCount;
 
-    public static int VERTICAL_AREAS_COUNT = 4;
+    private int verticalAreasCount;
 
     private final int indent = 5;
 
@@ -28,11 +28,13 @@ public class AmbilightRectanglePanel extends JPanel {
 
     private BufferedImage screenShot;
 
-    public AmbilightRectanglePanel(Dimension dialogDimension) {
+    public AmbilightRectanglePanel(Dimension dialogDimension, int horizontalAreasCount, int verticalAreasCount) {
+        this.horizontalAreasCount = horizontalAreasCount;
+        this.verticalAreasCount = verticalAreasCount;
         this.panelWidth = (int) dialogDimension.getWidth();
         this.panelHeight = (int) dialogDimension.getHeight();
-        this.rectangleWidth = (this.panelWidth - 2 * indent) / HORIZONTAL_AREAS_COUNT;
-        this.rectangleHeight =  (this.panelHeight - 2 * indent) / VERTICAL_AREAS_COUNT;
+        this.rectangleWidth = (this.panelWidth - 2 * indent) / horizontalAreasCount;
+        this.rectangleHeight =  (this.panelHeight - 2 * indent) / verticalAreasCount;
         createRectArray();
     }
 
@@ -50,19 +52,17 @@ public class AmbilightRectanglePanel extends JPanel {
 
     private void updateColorArray() {
         this.colorArray = new Color[this.rectangleArray.size()];
-        long timeout = System.currentTimeMillis();
         int colorIndex = 0;
         try {
             this.screenShot = getScreenShot();
-            for(int xArea = 0; xArea < HORIZONTAL_AREAS_COUNT; xArea++) {
-                for(int yArea = 0; yArea < VERTICAL_AREAS_COUNT; yArea++) {
-                    if(xArea == 0 || yArea == 0 || xArea == HORIZONTAL_AREAS_COUNT-1 || yArea == VERTICAL_AREAS_COUNT-1) {
+            for(int xArea = 0; xArea < horizontalAreasCount; xArea++) {
+                for(int yArea = 0; yArea < verticalAreasCount; yArea++) {
+                    if(xArea == 0 || yArea == 0 || xArea == horizontalAreasCount-1 || yArea == verticalAreasCount-1) {
                         colorArray[colorIndex] = getAverageColor(xArea, yArea);
                         colorIndex++;
                     }
                 }
             }
-            System.out.println(System.currentTimeMillis() - timeout);
         }catch(Exception ex){
             System.out.println("SMTH's wrong: ");
             ex.printStackTrace();
@@ -76,8 +76,8 @@ public class AmbilightRectanglePanel extends JPanel {
     }
 
     private Color getAverageColor(int xArea, int yArea) {
-        int areaWidth = screenShot.getWidth() / HORIZONTAL_AREAS_COUNT;
-        int areaHeight = screenShot.getHeight() / VERTICAL_AREAS_COUNT;
+        int areaWidth = screenShot.getWidth() / horizontalAreasCount;
+        int areaHeight = screenShot.getHeight() / verticalAreasCount;
         int pixelRGB;
         int pixelCounter = 0;
         int[] RGBArray = {0,0,0};
