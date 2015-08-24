@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 public class AmbilightRectanglePanel extends JPanel {
 
-    public static int HORIZONTAL_AREAS_COUNT = 6;
+    public static int HORIZONTAL_AREAS_COUNT = 8;
 
     public static int VERTICAL_AREAS_COUNT = 4;
 
@@ -34,47 +34,67 @@ public class AmbilightRectanglePanel extends JPanel {
         this.rectangleWidth = (this.panelWidth - 2 * indent) / HORIZONTAL_AREAS_COUNT;
         this.rectangleHeight =  (this.panelHeight - 2 * indent) / VERTICAL_AREAS_COUNT;
         createRectArray();
-        updateColorArray();
     }
 
     @Override
     public void paintComponent(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
         int index = 0;
-        for(Rectangle2D rect : rectangleArray){
-            //g2d.setColor(new Color(Math.random()));
+        updateColorArray();
+        for(Rectangle2D rect : rectangleArray) {
+            g2d.setColor(colorArray[index]);
             g2d.fill3DRect((int) rect.getX(), (int) rect.getY(), (int) rect.getWidth(), (int) rect.getHeight(), true);
+            index++;
         }
-
     }
 
-    private void updateColorArray(){
+    private void updateColorArray() {
         this.colorArray = new Color[this.rectangleArray.size()];
         long timeout = System.currentTimeMillis();
         int colorIndex = 0;
-        try{
+        try {
             this.screenShot = getScreenShot();
-            for(int xArea = 0; xArea < VERTICAL_AREAS_COUNT; xArea++){
-                for(int yArea = 0; yArea < HORIZONTAL_AREAS_COUNT; yArea++){
-                    colorArray[colorIndex] = getAverageColor(xArea, yArea);
-                    colorIndex++;
+            for(int xArea = 0; xArea < HORIZONTAL_AREAS_COUNT; xArea++) {
+                for(int yArea = 0; yArea < VERTICAL_AREAS_COUNT; yArea++) {
+                    if(xArea == 0 || yArea == 0 || xArea == HORIZONTAL_AREAS_COUNT-1 || yArea == VERTICAL_AREAS_COUNT-1) {
+                        colorArray[colorIndex] = getAverageColor(xArea, yArea);
+                        colorIndex++;
+                    }
                 }
             }
-
-        }catch(Exception ex){}
-
+            System.out.println(System.currentTimeMillis() - timeout);
+        }catch(Exception ex){
+            System.out.println("SMTH's wrong: ");
+            ex.printStackTrace();
+        }
     }
 
-    private BufferedImage getScreenShot() throws AWTException{
+    private BufferedImage getScreenShot() throws AWTException {
         Robot robot = new Robot();
         Rectangle area = new Rectangle(Toolkit.getDefaultToolkit().getScreenSize());
         return robot.createScreenCapture(area);
     }
 
-    private Color getAverageColor(int x, int y){
+    private Color getAverageColor(int xArea, int yArea) {
         int areaWidth = screenShot.getWidth() / HORIZONTAL_AREAS_COUNT;
         int areaHeight = screenShot.getHeight() / VERTICAL_AREAS_COUNT;
-        return Color.red;
+        int pixelRGB;
+        int pixelCounter = 0;
+        int[] RGBArray = {0,0,0};
+        for(int column = (areaWidth * xArea); column < (areaWidth * (xArea+1)); column += 4) {
+            for(int row = (areaHeight * yArea); row < (areaHeight * (yArea+1)); row += 4) {
+                pixelRGB = screenShot.getRGB(column, row);
+                addRGBToArray(pixelRGB, RGBArray);
+                pixelCounter++;
+            }
+        }
+        return new Color(RGBArray[0] / pixelCounter, RGBArray[1] / pixelCounter, RGBArray[2] / pixelCounter);
+    }
+
+    private void addRGBToArray(int rgb, int[] RGBArray) {
+        for(int i = 0; i < 3; i++){
+            RGBArray[2-i] += (rgb >> (i*8)) & 255;
+        }
     }
 
     private void createRectArray() {
