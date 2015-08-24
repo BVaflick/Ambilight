@@ -1,37 +1,65 @@
 package light.ambi;
 
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
 
 public class AmbilightMain {
+
+    private AmbilightDialog mainDialog;
+
+    private AmbilightSystemTrayIcon trayIcon;
+
+    public AmbilightMain(AmbilightDialog dialog, AmbilightSystemTrayIcon trayIcon){
+        this.mainDialog = dialog;
+        this.trayIcon = trayIcon;
+    }
+
     public static void main(String[] args) {
-        final AmbilightDialog d= new AmbilightDialog(202,118);
-        AmbilightSystemTrayIcon t = new AmbilightSystemTrayIcon("b","Icon.png");
-        t.addPopupMenuItem("Exit").addActionListener(new ActionListener() {
+
+        final AmbilightMain benjilight = new AmbilightMain(new AmbilightDialog(202,118), new AmbilightSystemTrayIcon("b","Icon.png")); //202.118
+
+        benjilight.getTrayIcon().addPopupMenuItem("Exit").addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 System.exit(0);
             }
         });
-        d.addWindowListener(new WindowAdapter() {
+
+        /*final Thread repaintThread = new Thread(new Runnable() {
             @Override
-            public void windowDeactivated(WindowEvent e) {
-                d.setVisible(false);
+            public void run() {
+                while(true) {
+                    benjilight.getDialog().getRectanglePanel().repaint();
+                    try {
+                        Thread.sleep(40);
+                    } catch (Exception ex) {}
+                }
             }
         });
-        final AmbilightRectanglePanel panel = new AmbilightRectanglePanel(d.getSize());
-        d.add(panel);
-        t.getTrayIcon().addActionListener(new ActionListener() {
+        repaintThread.start();*/
+
+        benjilight.getDialog().addWindowListener(new WindowAdapter() {
             @Override
-            public void actionPerformed(ActionEvent e) {
-                d.setVisible(true);
-                d.setToLowerRight();
-                panel.repaint();
+            public void windowDeactivated(WindowEvent e) {
+                benjilight.getDialog().setVisible(false);
+
             }
         });
 
+        benjilight.getTrayIcon().getTrayIcon().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                benjilight.getDialog().setVisible(true);
+                benjilight.getDialog().setToLowerRight();
+                benjilight.getDialog().getRectanglePanel().repaint();
+            }
+        });
+    }
+
+    public AmbilightDialog getDialog() {
+        return mainDialog;
+    }
+
+    public AmbilightSystemTrayIcon getTrayIcon() {
+        return trayIcon;
     }
 }
