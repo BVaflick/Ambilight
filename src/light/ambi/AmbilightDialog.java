@@ -17,11 +17,11 @@ public class AmbilightDialog extends JDialog {
         setLocationRelativeTo(null);
         //setVisible(true);
         getRootPane().setOpaque(false);
-        setBackground(new Color(28,38,46,130));
+        setBackground(new Color(28, 38, 46,130));
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
     }
     public void setToLowerRight(){
         Rectangle screenBounds = GraphicsEnvironment.getLocalGraphicsEnvironment().getMaximumWindowBounds();
-        setLocation(screenBounds.width-this.width,screenBounds.height-this.height);
+        setLocation(screenBounds.width - this.width, screenBounds.height - this.height);
     }
 }

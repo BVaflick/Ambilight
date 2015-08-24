@@ -30,22 +30,12 @@ public class AmbilightSystemTrayIcon {
 
     }
 
-    public MenuItem addPopupMenuItem(String itemName){
+    public MenuItem addPopupMenuItem(String itemName) {
         MenuItem item = new MenuItem(itemName);
         popupMenu.add(item);
         return item;
     }
-    public TrayIcon getTrayIcon(){
+    public TrayIcon getTrayIcon() {
         return this.trayIcon;
-    }
-
-    public void setOpenOnClick(final AmbilightDialog dialog){
-        this.trayIcon.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                dialog.setVisible(true);
-                dialog.setToLowerRight();
-            }
-        });
     }
 }
