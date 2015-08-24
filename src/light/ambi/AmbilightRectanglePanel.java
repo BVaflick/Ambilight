@@ -26,6 +26,8 @@ public class AmbilightRectanglePanel extends JPanel {
 
     private Color[] colorArray;
 
+    private BufferedImage screenShot;
+
     public AmbilightRectanglePanel(Dimension dialogDimension) {
         this.panelWidth = (int) dialogDimension.getWidth();
         this.panelHeight = (int) dialogDimension.getHeight();
@@ -38,8 +40,9 @@ public class AmbilightRectanglePanel extends JPanel {
     @Override
     public void paintComponent(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
-        g2d.setColor(Color.red);
+        int index = 0;
         for(Rectangle2D rect : rectangleArray){
+            //g2d.setColor(new Color(Math.random()));
             g2d.fill3DRect((int) rect.getX(), (int) rect.getY(), (int) rect.getWidth(), (int) rect.getHeight(), true);
         }
 
@@ -48,17 +51,30 @@ public class AmbilightRectanglePanel extends JPanel {
     private void updateColorArray(){
         this.colorArray = new Color[this.rectangleArray.size()];
         long timeout = System.currentTimeMillis();
+        int colorIndex = 0;
         try{
-            BufferedImage screenShot = getScreenShot();
+            this.screenShot = getScreenShot();
+            for(int xArea = 0; xArea < VERTICAL_AREAS_COUNT; xArea++){
+                for(int yArea = 0; yArea < HORIZONTAL_AREAS_COUNT; yArea++){
+                    colorArray[colorIndex] = getAverageColor(xArea, yArea);
+                    colorIndex++;
+                }
+            }
 
         }catch(Exception ex){}
 
     }
 
-    public BufferedImage getScreenShot() throws AWTException{
+    private BufferedImage getScreenShot() throws AWTException{
         Robot robot = new Robot();
         Rectangle area = new Rectangle(Toolkit.getDefaultToolkit().getScreenSize());
         return robot.createScreenCapture(area);
+    }
+
+    private Color getAverageColor(int x, int y){
+        int areaWidth = screenShot.getWidth() / HORIZONTAL_AREAS_COUNT;
+        int areaHeight = screenShot.getHeight() / VERTICAL_AREAS_COUNT;
+        return Color.red;
     }
 
     private void createRectArray() {
