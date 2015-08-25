@@ -15,7 +15,7 @@ public class AmbilightMain {
 
     public static void main(String[] args) {
 
-        final AmbilightMain benjilight = new AmbilightMain(new AmbilightDialog(202,118), new AmbilightSystemTrayIcon("b","Icon.png")); //202.118
+        final AmbilightMain benjilight = new AmbilightMain(new AmbilightDialog(202,118), new AmbilightSystemTrayIcon("benjilight","Icon.png")); //202.118
 
         benjilight.getTrayIcon().addPopupMenuItem("Exit").addActionListener(new ActionListener() {
             @Override
