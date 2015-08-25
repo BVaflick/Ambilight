@@ -13,8 +13,6 @@ public class AmbilightMain {
         this.trayIcon = trayIcon;
     }
 
-    public void ololo(){}
-
     public static void main(String[] args) {
 
         final AmbilightMain benjilight = new AmbilightMain(new AmbilightDialog(202,118), new AmbilightSystemTrayIcon("benjilight","Icon.png"));
