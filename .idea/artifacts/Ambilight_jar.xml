@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="Ambilight:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/Ambilight_jar</output-path>
+    <root id="archive" name="Ambilight.jar">
+      <element id="module-output" name="Ambilight" />
+    </root>
+  </artifact>
+</component>
